@@ -5,11 +5,11 @@ import (
 	"github.com/liemle3893/user-event-importer/event"
 )
 
-type ImportFunc func(e ...event.Event) (int32, error)
+type ImportFunc func(e ...event.IEvent) (int32, error)
 
 type Importer interface {
 	// Import events and return number of imported events
-	Import(events ...event.Event) (int32, error)
+	Import(events ...event.IEvent) (int32, error)
 }
 
 func NewImporter(fn ImportFunc) Importer {
@@ -36,7 +36,7 @@ type wrappedFunc struct {
 	fn ImportFunc
 }
 
-func (i wrappedFunc) Import(e ...event.Event) (int32, error) {
+func (i wrappedFunc) Import(e ...event.IEvent) (int32, error) {
 	return i.fn(e...)
 }
 
@@ -44,14 +44,14 @@ type wrappedImporter struct {
 	Importer
 }
 
-func (i wrappedImporter) import0(ch chan importResult, e []event.Event) {
+func (i wrappedImporter) import0(ch chan importResult, e []event.IEvent) {
 	go func() {
 		count, err := i.Importer.Import(e...)
 		ch <- importResult{count, err}
 	}()
 }
 
-func (c *CompositeImporter) Import(e ...event.Event) (int32, error) {
+func (c *CompositeImporter) Import(e ...event.IEvent) (int32, error) {
 	var importedEvents int32
 	var err *multierror.Error
 	resultCh := make(chan importResult)

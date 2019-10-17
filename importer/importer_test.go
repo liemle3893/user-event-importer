@@ -14,37 +14,37 @@ var (
 
 func TestImport(t *testing.T) {
 
-	memoryImporter := NewImporter(func(events ...event.Event) (int32, error) {
+	memoryImporter := NewImporter(func(events ...event.IEvent) (int32, error) {
 		var count int32
 		for _, event := range events {
-			key := fmt.Sprintf("%v_%v_%v", event.UserID, event.Kind, event.Timestamp)
-			dataSource[key] = event.Data
+			key := fmt.Sprintf("%v_%v_%v", event.GetSubject(), event.GetKind(), event.GetTimestamp())
+			dataSource[key] = event.GetSubject()
 			count++
 		}
 		return count, nil
 	})
 	mainImporter := NewCompositeImporter(memoryImporter)
 	t.Run("Should import into memory success", func(t *testing.T) {
-		count, err := mainImporter.Import([]event.Event{
-			{
-				Timestamp: time.Now(),
-				UserID:    "1",
-				Kind:      "click",
-				Data:      nil,
-			},
-			{
-				Timestamp: time.Now(),
-				UserID:    "2",
-				Kind:      "click",
-				Data:      nil,
-			},
-			{
-				Timestamp: time.Now(),
-				UserID:    "1",
-				Kind:      "play:song",
-				Data:      nil,
-			},
-		}...)
+		e1 := &event.Event{
+			Timestamp: time.Now(),
+			Subject:   "1",
+			Kind:      "click",
+		}
+		e2 := &event.Event{
+			Timestamp: time.Now(),
+			Subject:   "2",
+			Kind:      "click",
+		}
+		e3 := &event.Event{
+			Timestamp: time.Now(),
+			Subject:   "2",
+			Kind:      "play:song",
+		}
+		var events []event.IEvent
+		events = append(events, e1)
+		events = append(events, e2)
+		events = append(events, e3)
+		count, err := mainImporter.Import(events...)
 		if count != 3 {
 			t.Error("Invalid count")
 		}

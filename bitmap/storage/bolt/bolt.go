@@ -5,7 +5,7 @@ import (
 	"github.com/boltdb/bolt"
 	"github.com/golang/snappy"
 	"github.com/liemle3893/user-event-importer/bitmap"
-	root "github.com/liemle3893/user-event-importer/database"
+	database2 "github.com/liemle3893/user-event-importer/bitmap/storage"
 	"io"
 	"log"
 	"time"
@@ -58,7 +58,7 @@ func (d *database) Close() {
 	d.db.Close()
 }
 
-func NewBitmapDatabase(dbFile string) (root.Database, error) {
+func NewBitmapDatabase(dbFile string) (database2.BitmapStorage, error) {
 	db, err := bolt.Open(dbFile, 0644, &bolt.Options{Timeout: time.Second})
 	if err != nil {
 		return nil, err
@@ -94,7 +94,7 @@ func (d *database) Persist(writer io.Writer) error {
 	})
 }
 
-func (d *database) Get(key string, fn root.DeserializeFunc) (bitmap.BitMap, error) {
+func (d *database) Get(key string, fn database2.DeserializeFunc) (bitmap.BitMap, error) {
 	// Check if key exists. If not. Return error
 	if _, ok := d.keys[key]; !ok {
 		return nil, BitMapNotFoundError

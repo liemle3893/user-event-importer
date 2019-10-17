@@ -14,10 +14,10 @@ func TestLoadingDataFromFile(t *testing.T) {
 	db, _ := NewBitmapDatabase(dbFile)
 	oriKey := "events:click:2019_09_01"
 	bm := roaring.NewBitMap(oriKey, "My test")
-	bm.Mark(uint64(1))
-	bm.Mark(uint64(2))
-	bm.Mark(uint64(423))
-	// Save bitmap into database
+	bm.Mark("1")
+	bm.Mark("2")
+	bm.Mark("423")
+	// Save bitmap into storage
 	db.Put(bm)
 	db.Close()
 	// When
@@ -30,7 +30,7 @@ func TestLoadingDataFromFile(t *testing.T) {
 
 	bm1, _ := db1.Get(oriKey, fn)
 	// Then
-	exist, _ := bm1.Exists(uint64(1))
+	exist, _ := bm1.Exists("1")
 	assert.Equal(t, true, exist)
 	// Clean it up
 	os.Remove(dbFile)

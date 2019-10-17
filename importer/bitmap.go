@@ -54,7 +54,7 @@ func (importer *BitmapImporter) Import(events ...event.Event) (int32, error) {
 		eventKeys := eventIdGenerator(_event)
 		for _, key := range eventKeys {
 			bm := importer.getBitmap(key)
-			err := bm.Mark(_event.UserID)
+			err := bm.Mark(_event.Subject)
 			if err != nil {
 				errors = multierror.Append(errors, err)
 			} else {
