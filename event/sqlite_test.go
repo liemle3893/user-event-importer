@@ -1,9 +1,8 @@
-package storage
+package event
 
 import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
-	"github.com/liemle3893/user-event-importer/event"
 	"github.com/stretchr/testify/assert"
 	"log"
 	"testing"
@@ -12,7 +11,7 @@ import (
 
 type rollUpEvent struct {
 	gorm.Model
-	*event.Event
+	*Event
 	Data int `gorm:"column:data"`
 }
 
@@ -25,13 +24,13 @@ func TestSQLiteStorage(t *testing.T) {
 	gormDb.LogMode(true)
 	db := NewDatabase(gormDb)
 	e1 := &rollUpEvent{
-		Event: &event.Event{Timestamp: time.Now(),
+		Event: &Event{Timestamp: time.Now(),
 			Subject: "user:423",
 			Kind:    "test",},
 		Data: 1,
 	}
 	e2 := &rollUpEvent{
-		Event: &event.Event{Timestamp: time.Now(),
+		Event: &Event{Timestamp: time.Now(),
 			Subject: "user:124",
 			Kind:    "test",},
 		Data: 2,

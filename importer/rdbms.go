@@ -2,11 +2,10 @@ package importer
 
 import (
 	"github.com/liemle3893/user-event-importer/event"
-	"github.com/liemle3893/user-event-importer/event/storage"
 )
 
 type DatabaseImporter struct {
-	storage storage.DataStorage
+	storage event.DataStorage
 }
 
 func (importer *DatabaseImporter) Import(events ...event.IEvent) (int32, error) {
@@ -21,6 +20,6 @@ func (importer *DatabaseImporter) Import(events ...event.IEvent) (int32, error) 
 	return int32(len(events)), nil
 }
 
-func NewDatabaseImporter(s storage.DataStorage) *DatabaseImporter {
+func NewDatabaseImporter(s event.DataStorage) *DatabaseImporter {
 	return &DatabaseImporter{storage: s}
 }

@@ -3,7 +3,6 @@ package importer
 import (
 	"github.com/jinzhu/gorm"
 	"github.com/liemle3893/user-event-importer/event"
-	"github.com/liemle3893/user-event-importer/event/storage"
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
@@ -16,7 +15,7 @@ func TestDatabaseImporter_Import(t *testing.T) {
 		panic("Fail to open db connection. ")
 	}
 	gormDb.LogMode(true)
-	dataStorage := storage.NewDatabase(gormDb)
+	dataStorage := event.NewDatabase(gormDb)
 	gormDb.AutoMigrate(&WrappedEvent{})
 	importer := NewDatabaseImporter(dataStorage)
 	e1 := &WrappedEvent{
