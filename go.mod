@@ -9,7 +9,6 @@ require (
 	github.com/hashicorp/go-multierror v1.0.0
 	github.com/jinzhu/gorm v1.9.11
 	github.com/kr/pretty v0.1.0 // indirect
-	github.com/mattn/go-sqlite3 v1.11.0
 	github.com/stretchr/testify v1.4.0
 	golang.org/x/sys v0.0.0-20190926180325-855e68c8590b // indirect
 )
